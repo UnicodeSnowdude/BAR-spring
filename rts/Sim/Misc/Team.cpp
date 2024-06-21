@@ -141,39 +141,21 @@ bool CTeam::UseEnergy(float amount)
 	return true;
 }
 
-
-
 void CTeam::AddMetal(float amount, bool useIncomeMultiplier)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
-	if (useIncomeMultiplier)
-		amount *= GetIncomeMultiplier();
-
-	res.metal += amount;
-	resIncome.metal += amount;
-
-	if (res.metal <= resStorage.metal)
-		return;
-
-	resDelayedShare.metal += (res.metal - resStorage.metal);
-	res.metal = resStorage.metal;
+	SResourcePack res;
+	res.metal = amount;
+	AddResources(res, useIncomeMultiplier);
 }
 
 void CTeam::AddEnergy(float amount, bool useIncomeMultiplier)
 {
 	RECOIL_DETAILED_TRACY_ZONE;
-	if (useIncomeMultiplier)
-		amount *= GetIncomeMultiplier();
-
-	res.energy += amount;
-	resIncome.energy += amount;
-
-	if (res.energy > resStorage.energy) {
-		resDelayedShare.energy += (res.energy - resStorage.energy);
-		res.energy = resStorage.energy;
-	}
+	SResourcePack res;
+	res.energy = amount;
+	AddResources(res, useIncomeMultiplier);
 }
-
 
 bool CTeam::HaveResources(const SResourcePack& amount) const
 {
